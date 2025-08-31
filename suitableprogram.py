@@ -15,10 +15,10 @@ class AdvancedMath:
     def is_perfect_square(self, n):
         return int(math.sqrt(n))**2 == n
 
-    def nth_fibonacci(self, n):
-        a, b = 0, 1
-        for _ in range(n): a, b = b, a + b
-        return a
+    def square_root(self, x):
+        if x < 0:
+            raise ValueError("Cannot compute square root of a negative number")
+        return round(math.sqrt(x), 6)
     
     def is_armstrong(self, n):
         digits = [int(d) for d in str(n)]
@@ -26,7 +26,7 @@ class AdvancedMath:
 
     # Geometry
 
-    def heron_area(self, a, b, c):
+    def area(self, a, b, c):
         s = (a + b + c) / 2
         return math.sqrt(s * (s - a) * (s - b) * (s - c))
     
@@ -50,6 +50,12 @@ class AdvancedMath:
 
     # Trigonometry
 
+    def deg_to_rad(degrees):
+        return degrees * (math.pi / 180)
+    
+    def rad_to_deg(radians):
+        return radians * (180 / math.pi)
+
     def sin_deg(self, deg):
         return math.sin(math.radians(deg))
     
@@ -58,17 +64,9 @@ class AdvancedMath:
     
     def tan_deg(self, deg):
         return math.tan(math.radians(deg))
-    
-    def law_of_cosines(self, a, b, angle_C_deg):
-        C = math.radians(angle_C_deg)
-        return math.sqrt(a**2 + b**2 - 2*a*b*math.cos(C))
-    
-    def law_of_sines(self, a, angle_A_deg, angle_B_deg):
-        A = math.radians(angle_A_deg)
-        B = math.radians(angle_B_deg)
-        return (a * math.sin(B)) / math.sin(A) if math.sin(A) != 0 else None
 
     # Statistics
+
     def mean(self, data):
         return statistics.mean(data)
 
@@ -113,6 +111,30 @@ class AdvancedMath:
         for i in range(5, int(math.sqrt(n)) + 1, 6):
             if n % i == 0 or n % (i + 2) == 0: return False
         return True
+    
+    def solve_quadratic(self, a, b, c):
+        d = b**2 - 4*a*c
+        if d < 0: return []
+        sqrt_d = math.sqrt(d)
+        return [(-b + sqrt_d) / (2*a), (-b - sqrt_d) / (2*a)]
+    
+    def factor_integer(self, n):
+        if n == 0:
+            raise ValueError("Cannot factor zero")
+        if abs(n) == 1:
+            return [n]
+        n = abs(n)
+        factors = []
+        while n % 2 == 0:
+            factors.append(2)
+            n //= 2
+        for i in range(3, int(math.sqrt(n)) + 1, 2):
+            while n % i == 0:
+                factors.append(i)
+                n //= i
+        if n > 2:
+            factors.append(n)
+        return factors
 
 
 
@@ -130,17 +152,17 @@ class testing(unittest.TestCase):
     def test_is_perfect_square(self):
         self.assertTrue(self.aM.is_perfect_square(16))
 
-    def test_nth_fibonacci(self):
-        self.assertEqual(self.aM.nth_fibonacci(10), 55)
+    def test_square_root_positive(self):
+        self.assertAlmostEqual(self.aM.square_root(25), 5)
 
     def test_is_armstrong(self):
         self.assertTrue(self.aM.is_armstrong(153))
 
-    def test_heron_area(self):
-        self.assertAlmostEqual(self.aM.heron_area(3, 4, 5), 6.0)
+    def test_area(self):
+        self.assertAlmostEqual(self.aM.area(3, 4, 5), 6.0)
 
     def test_distance_2d(self):
-        self.assertAlmostEqual(self.aM.distance_2d(0, 0, 3, 4), 5.0)
+        self.assertAlmostEqual(self.aM.distance_2d(0, 0, 3, 4), 5)
 
     def test_angle_between_vectors(self):
         v1 = [1, 0]
@@ -149,23 +171,43 @@ class testing(unittest.TestCase):
 
     def test_derivative(self):
         f = lambda x: x ** 2
-        self.assertAlmostEqual(self.aM.derivative(f, 3), 6.0, places = 5)
+        self.assertAlmostEqual(self.aM.derivative(f, 3), 6, places = 5)
 
     def test_integral(self):
         f = lambda x: x
-        self.assertAlmostEqual(self.aM.integral(f, 0, 1), 0.5, places=4)
+        self.assertAlmostEqual(self.aM.integral(f, 0, 1), 0.5, places = 4)
+
+
+    def test_deg_to_rad(self):
+        self.assertTrue(math.isclose(self.aM.deg_to_rad(180), math.pi))
+
+    def test_rad_to_deg(self):
+        self.assertTrue(math.isclose(self.aM.rad_to_deg(math.pi), 180))
+
+    def test_sin_deg(self):
+        self.assertTrue(math.isclose(self.aM.sin_deg(90), 1))
+
+    def test_cos_deg(self):
+        self.assertTrue(math.isclose(self.aM.cos_deg(180), -1))
+
+    def test_tan_deg(self):
+        self.assertTrue(math.isclose(self.aM.tan_deg(45), 1))
+
+
+
+    
 
     def test_factorial(self):
         self.assertEqual(self.aM.factorial(5), 120)
 
     def test_missing_hypotenuse(self):
-        self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, 4, None), 5.0)
+        self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, 4, None), 5)
 
     def test_missing_leg_1(self):
-        self.assertAlmostEqual(self.aM.missing_right_triangle_side(None, 4, 5), 3.0)
+        self.assertAlmostEqual(self.aM.missing_right_triangle_side(None, 4, 5), 3)
 
     def test_missing_leg_2(self):
-        self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, None, 5), 4.0)
+        self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, None, 5), 4)
 
     def test_prime_true(self):
         self.assertTrue(self.aM.is_prime(101))
@@ -179,6 +221,15 @@ class testing(unittest.TestCase):
     def test_prime_zero(self):
         self.assertFalse(self.aM.is_prime(0))
     
+    def test_quadratic(self):
+        roots = self.aM.solve_quadratic(1, -3, 2)
+        self.assertIn(2, roots)
+
+    def test_factor_integer(self):
+        self.assertEqual(self.aM.factor_integer(28), [2, 2, 7])
+
+    
+
     
     
 
