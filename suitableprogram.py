@@ -50,10 +50,10 @@ class AdvancedMath:
 
     # Trigonometry
 
-    def deg_to_rad(degrees):
+    def deg_to_rad(self, degrees):
         return degrees * (math.pi / 180)
     
-    def rad_to_deg(radians):
+    def rad_to_deg(self, radians):
         return radians * (180 / math.pi)
 
     def sin_deg(self, deg):
@@ -177,7 +177,6 @@ class testing(unittest.TestCase):
         f = lambda x: x
         self.assertAlmostEqual(self.aM.integral(f, 0, 1), 0.5, places = 4)
 
-
     def test_deg_to_rad(self):
         self.assertTrue(math.isclose(self.aM.deg_to_rad(180), math.pi))
 
@@ -193,9 +192,20 @@ class testing(unittest.TestCase):
     def test_tan_deg(self):
         self.assertTrue(math.isclose(self.aM.tan_deg(45), 1))
 
+    def test_mean(self):
+        self.assertEqual(self.aM.mean([1, 2, 3, 4, 5]), 3)
 
+    def test_median(self):
+        self.assertEqual(self.aM.median([1, 2, 3]), 2)
 
-    
+    def test_mode(self):
+        self.assertEqual(self.aM.mode([1, 2, 2, 3]), 2)
+
+    def test_stdev(self):
+        self.assertAlmostEqual(self.aM.stdev([1, 2, 3]), 1.0)
+
+    def test_variance(self):
+        self.assertAlmostEqual(self.aM.variance([1, 2, 3]), 1.0)
 
     def test_factorial(self):
         self.assertEqual(self.aM.factorial(5), 120)
