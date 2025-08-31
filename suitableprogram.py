@@ -159,7 +159,7 @@ class testing(unittest.TestCase):
         self.assertTrue(self.aM.is_armstrong(153))
 
     def test_area(self):
-        self.assertAlmostEqual(self.aM.area(3, 4, 5), 6.0)
+        self.assertAlmostEqual(self.aM.area(3, 4, 5), 6)
 
     def test_distance_2d(self):
         self.assertAlmostEqual(self.aM.distance_2d(0, 0, 3, 4), 5)
@@ -170,12 +170,14 @@ class testing(unittest.TestCase):
         self.assertAlmostEqual(self.aM.angle_between_vectors(v1, v2), math.pi / 2)
 
     def test_derivative(self):
-        f = lambda x: x ** 2
+        def f(x):
+            return x ** 2
         self.assertAlmostEqual(self.aM.derivative(f, 3), 6, places = 5)
 
     def test_integral(self):
-        f = lambda x: x
-        self.assertAlmostEqual(self.aM.integral(f, 0, 1), 0.5, places = 4)
+        def f(x):
+            return x
+        self.assertAlmostEqual(self.aM.integral(f, 0, 1), .5, places = 4)
 
     def test_deg_to_rad(self):
         self.assertTrue(math.isclose(self.aM.deg_to_rad(180), math.pi))
@@ -202,10 +204,10 @@ class testing(unittest.TestCase):
         self.assertEqual(self.aM.mode([1, 2, 2, 3]), 2)
 
     def test_stdev(self):
-        self.assertAlmostEqual(self.aM.stdev([1, 2, 3]), 1.0)
+        self.assertAlmostEqual(self.aM.stdev([1, 2, 3]), 1)
 
     def test_variance(self):
-        self.assertAlmostEqual(self.aM.variance([1, 2, 3]), 1.0)
+        self.assertAlmostEqual(self.aM.variance([1, 2, 3]), 1)
 
     def test_factorial(self):
         self.assertEqual(self.aM.factorial(5), 120)
@@ -237,11 +239,6 @@ class testing(unittest.TestCase):
 
     def test_factor_integer(self):
         self.assertEqual(self.aM.factor_integer(28), [2, 2, 7])
-
-    
-
-    
-    
 
 if __name__ == '__main__':
     unittest.main()
