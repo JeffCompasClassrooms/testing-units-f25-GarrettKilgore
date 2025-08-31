@@ -30,7 +30,7 @@ class AdvancedMath:
         s = (a + b + c) / 2
         return math.sqrt(s * (s - a) * (s - b) * (s - c))
     
-    def distance_2d(self, x1, y1, x2, y2):
+    def distance(self, x1, y1, x2, y2):
         return math.hypot(x2 - x1, y2 - y1)
 
     def angle_between_vectors(self, v1, v2):
@@ -145,24 +145,31 @@ class testing(unittest.TestCase):
 
     def test_solve_linear(self):
         self.assertEqual(self.aM.solve_linear(2, -4), 2)
+        self.assertAlmostEqual(self.aM.solve_linear(.5, -1), 2)
 
     def test_discriminant(self):
         self.assertEqual(self.aM.discriminant(1, -3, 2), 1)
+        self.assertEqual(self.aM.discriminant(2, 5, -3), 49)
 
     def test_is_perfect_square(self):
         self.assertTrue(self.aM.is_perfect_square(16))
+        self.assertFalse(self.aM.is_perfect_square(20))
 
     def test_square_root_positive(self):
         self.assertAlmostEqual(self.aM.square_root(25), 5)
+        self.assertEqual(self.aM.square_root(36), 6)
 
     def test_is_armstrong(self):
         self.assertTrue(self.aM.is_armstrong(153))
+        self.assertFalse(self.aM.is_armstrong(123))
 
     def test_area(self):
         self.assertAlmostEqual(self.aM.area(3, 4, 5), 6)
+        self.assertEqual(self.aM.area(5, 12, 13), 30)
 
-    def test_distance_2d(self):
-        self.assertAlmostEqual(self.aM.distance_2d(0, 0, 3, 4), 5)
+    def test_distance(self):
+        self.assertAlmostEqual(self.aM.distance(0, 0, 3, 4), 5)
+        self.assertEqual(self.aM.distance(-1, -1, 2, 3), 5)
 
     def test_angle_between_vectors(self):
         v1 = [1, 0]
@@ -173,6 +180,7 @@ class testing(unittest.TestCase):
         def f(x):
             return x ** 2
         self.assertAlmostEqual(self.aM.derivative(f, 3), 6, places = 5)
+        self.assertEqual(self.aM.derivative(f, 0), 0)
 
     def test_integral(self):
         def f(x):
@@ -181,51 +189,68 @@ class testing(unittest.TestCase):
 
     def test_deg_to_rad(self):
         self.assertTrue(math.isclose(self.aM.deg_to_rad(180), math.pi))
+        self.assertFalse(math.isclose(self.aM.deg_to_rad(90), math.pi))
 
     def test_rad_to_deg(self):
         self.assertTrue(math.isclose(self.aM.rad_to_deg(math.pi), 180))
+        self.assertFalse(math.isclose(self.aM.rad_to_deg(math.pi/2), 180))
 
     def test_sin_deg(self):
         self.assertTrue(math.isclose(self.aM.sin_deg(90), 1))
+        self.assertFalse(math.isclose(self.aM.sin_deg(0), 1))
 
     def test_cos_deg(self):
         self.assertTrue(math.isclose(self.aM.cos_deg(180), -1))
+        self.assertFalse(math.isclose(self.aM.cos_deg(90), -1))
 
     def test_tan_deg(self):
         self.assertTrue(math.isclose(self.aM.tan_deg(45), 1))
+        self.assertFalse(math.isclose(self.aM.tan_deg(0), 1))
 
     def test_mean(self):
         self.assertEqual(self.aM.mean([1, 2, 3, 4, 5]), 3)
+        self.assertAlmostEqual(self.aM.mean([1.5, 2.5, 3.5]), 2.5)
 
     def test_median(self):
         self.assertEqual(self.aM.median([1, 2, 3]), 2)
+        self.assertAlmostEqual(self.aM.median([1, 2, 3, 4]), 2.5)
 
     def test_mode(self):
         self.assertEqual(self.aM.mode([1, 2, 2, 3]), 2)
+        self.assertTrue(self.aM.mode([1, 2, 3]), 2)
+        self.assertNotEqual(self.aM.mode([1, 2, 3]), 4)
 
     def test_stdev(self):
         self.assertAlmostEqual(self.aM.stdev([1, 2, 3]), 1)
+        self.assertNotEqual(self.aM.stdev([1, 2, 3]), 2)
 
     def test_variance(self):
         self.assertAlmostEqual(self.aM.variance([1, 2, 3]), 1)
+        self.assertNotEqual(self.aM.variance([1, 2, 3]), 2)
 
     def test_factorial(self):
         self.assertEqual(self.aM.factorial(5), 120)
+        self.assertAlmostEqual(self.aM.factorial(0), 1)
 
     def test_missing_hypotenuse(self):
         self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, 4, None), 5)
+        self.assertEqual(self.aM.missing_right_triangle_side(5, 12, None), 13)
+        self.assertNotEqual(self.aM.missing_right_triangle_side(8, 15, None), 20)
 
     def test_missing_leg_1(self):
         self.assertAlmostEqual(self.aM.missing_right_triangle_side(None, 4, 5), 3)
-
+        self.assertNotAlmostEqual(self.aM.missing_right_triangle_side(None, 6, 10), 5)
+        
     def test_missing_leg_2(self):
         self.assertAlmostEqual(self.aM.missing_right_triangle_side(3, None, 5), 4)
 
     def test_prime_true(self):
         self.assertTrue(self.aM.is_prime(101))
+        self.assertAlmostEqual(self.aM.is_prime(13), True)
 
     def test_prime_false(self):
         self.assertFalse(self.aM.is_prime(-5))
+        self.assertNotEqual(self.aM.is_prime(100), True)
 
     def test_prime_one(self):
         self.assertFalse(self.aM.is_prime(1))
@@ -239,6 +264,8 @@ class testing(unittest.TestCase):
 
     def test_factor_integer(self):
         self.assertEqual(self.aM.factor_integer(28), [2, 2, 7])
+        self.assertAlmostEqual(self.aM.factor_integer(13), [13])
+        self.assertNotEqual(self.aM.factor_integer(20), [4, 5])
 
 if __name__ == '__main__':
     unittest.main()
